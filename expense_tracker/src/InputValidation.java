@@ -10,6 +10,12 @@ public class InputValidation {
      */
     public double validateAmount(String amountInput) {
         double amount = 0;
+        try {
+            amount = Double.parseDouble(amountInput);
+            System.out.println(amount);
+        } catch(NumberFormatException error) {
+            throw new NumberFormatException("Amount can only be a number");
+        }
         return amount;
     }
 

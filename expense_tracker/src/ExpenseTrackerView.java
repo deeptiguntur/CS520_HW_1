@@ -16,6 +16,8 @@ public class ExpenseTrackerView extends JFrame {
   private DefaultTableModel model;
   private List<Transaction> transactions = new ArrayList<>();
 
+  InputValidation validation = new InputValidation();
+
   
 
   public JTable getTransactionsTable() {
@@ -25,9 +27,15 @@ public class ExpenseTrackerView extends JFrame {
   public double getAmountField() {
     if(amountField.getText().isEmpty()) {
       return 0;
-    }else {
-    double amount = Double.parseDouble(amountField.getText());
-    return amount;
+    } else {
+      double amount = 0;
+      try {
+        amount = validation.validateAmount(amountField.getText());
+      } catch(NumberFormatException e) {
+        System.out.println("Error");
+      }
+      // double amount = Double.parseDouble(amountField.getText());
+      return amount;
     }
   }
 
