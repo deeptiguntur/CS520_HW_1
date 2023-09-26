@@ -10,6 +10,7 @@ import java.util.List;
 public class ExpenseTrackerView extends JFrame {
 
   private JTable transactionsTable;
+  private JLabel amountErrorLabel;
   private JButton addTransactionBtn;
   private JTextField amountField;
   private JTextField categoryField;
@@ -31,8 +32,10 @@ public class ExpenseTrackerView extends JFrame {
       double amount = 0;
       try {
         amount = validation.validateAmount(amountField.getText());
+        amountErrorLabel.setText("");
       } catch(NumberFormatException e) {
-        System.out.println("Error");
+        amountErrorLabel.setText("Invalid amount");
+        System.out.println(e);
       }
       // double amount = Double.parseDouble(amountField.getText());
       return amount;
@@ -68,6 +71,8 @@ public class ExpenseTrackerView extends JFrame {
     // Create UI components
     JLabel amountLabel = new JLabel("Amount:");
     amountField = new JTextField(10);
+
+    amountErrorLabel = new JLabel("");
     
     JLabel categoryLabel = new JLabel("Category:");
     categoryField = new JTextField(10);
@@ -77,6 +82,7 @@ public class ExpenseTrackerView extends JFrame {
     JPanel inputPanel = new JPanel();
     inputPanel.add(amountLabel);
     inputPanel.add(amountField);
+    inputPanel.add(amountErrorLabel);
     inputPanel.add(categoryLabel); 
     inputPanel.add(categoryField);
     inputPanel.add(addTransactionBtn);
