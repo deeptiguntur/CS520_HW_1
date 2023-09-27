@@ -34,10 +34,16 @@ public class ExpenseTrackerView extends JFrame {
         amount = validation.validateAmount(amountField.getText());
         amountErrorLabel.setText("");
       } catch(NumberFormatException e) {
-        amountErrorLabel.setText("Invalid amount");
-        System.out.println(e);
+        // When amount is not a number
+        amountErrorLabel.setText(e.getMessage());
+        System.out.println(e.getMessage());
+        return 0;
+      } catch(IllegalArgumentException e) {
+        // When amount is less than 0 or greater than 1000
+        amountErrorLabel.setText(e.getMessage());
+        System.out.println(e.getMessage());
+        return 0;
       }
-      // double amount = Double.parseDouble(amountField.getText());
       return amount;
     }
   }
@@ -47,7 +53,14 @@ public class ExpenseTrackerView extends JFrame {
   }
 
   public String getCategoryField() {
-    return categoryField.getText();
+    String category = null;
+    try {
+      category = validation.validateCategory(categoryField.getText());
+    } catch (IllegalArgumentException e) {
+      System.out.println(e.getMessage());
+      return null;
+    }
+    return category;
   }
 
   public void setCategoryField(JTextField categoryField) {
