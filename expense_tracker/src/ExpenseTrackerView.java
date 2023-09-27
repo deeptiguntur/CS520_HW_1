@@ -11,11 +11,13 @@ public class ExpenseTrackerView extends JFrame {
 
   private JTable transactionsTable;
   private JLabel amountErrorLabel;
+  private JLabel categoryErrorLabel;
   private JButton addTransactionBtn;
   private JTextField amountField;
   private JTextField categoryField;
   private DefaultTableModel model;
   private List<Transaction> transactions = new ArrayList<>();
+  JPanel errorPanel = new JPanel();
 
   InputValidation validation = new InputValidation();
 
@@ -26,26 +28,25 @@ public class ExpenseTrackerView extends JFrame {
   }
 
   public double getAmountField() {
-    if(amountField.getText().isEmpty()) {
+    double amount = 0;
+
+    try {
+      amount = validation.validateAmount(amountField.getText());
+      amountErrorLabel.setText("");
+    } catch(NumberFormatException e) {
+
+      // When amount is not a number
+      amountErrorLabel.setText(e.getMessage());
+      System.out.println(e.getMessage());
       return 0;
-    } else {
-      double amount = 0;
-      try {
-        amount = validation.validateAmount(amountField.getText());
-        amountErrorLabel.setText("");
-      } catch(NumberFormatException e) {
-        // When amount is not a number
-        amountErrorLabel.setText(e.getMessage());
-        System.out.println(e.getMessage());
-        return 0;
-      } catch(IllegalArgumentException e) {
-        // When amount is less than 0 or greater than 1000
-        amountErrorLabel.setText(e.getMessage());
-        System.out.println(e.getMessage());
-        return 0;
-      }
-      return amount;
+    } catch(IllegalArgumentException e) {
+
+      // When amount is less than 0 or greater than 1000
+      amountErrorLabel.setText(e.getMessage());
+      System.out.println(e.getMessage());
+      return 0;
     }
+    return amount;
   }
 
   public void setAmountField(JTextField amountField) {
@@ -54,9 +55,14 @@ public class ExpenseTrackerView extends JFrame {
 
   public String getCategoryField() {
     String category = null;
+
     try {
       category = validation.validateCategory(categoryField.getText());
+      categoryErrorLabel.setText("");
     } catch (IllegalArgumentException e) {
+      
+      // When category is empty or doesn't match the predefined values
+      categoryErrorLabel.setText(e.getMessage());
       System.out.println(e.getMessage());
       return null;
     }
@@ -84,30 +90,37 @@ public class ExpenseTrackerView extends JFrame {
     // Create UI components
     JLabel amountLabel = new JLabel("Amount:");
     amountField = new JTextField(10);
-
-    amountErrorLabel = new JLabel("");
     
     JLabel categoryLabel = new JLabel("Category:");
     categoryField = new JTextField(10);
     transactionsTable = new JTable(model);
-  
+    
+    // Error panel to show errors in UI
+    errorPanel.add(amountErrorLabel, BorderLayout.NORTH);
+    errorPanel.add(categoryErrorLabel, BorderLayout.SOUTH);
+
+    // Amount and category error messages for UI
+    amountErrorLabel = new JLabel("");
+    categoryErrorLabel = new JLabel("");
+    
     // Layout components
     JPanel inputPanel = new JPanel();
     inputPanel.add(amountLabel);
     inputPanel.add(amountField);
-    inputPanel.add(amountErrorLabel);
     inputPanel.add(categoryLabel); 
     inputPanel.add(categoryField);
     inputPanel.add(addTransactionBtn);
 
-    JPanel errorPanel = new JPanel();
-    errorPanel.add(amountErrorLabel);
+    // Panel which contains input fields and error messages
+    JPanel inputErrorPanel = new JPanel();
+    inputErrorPanel.add(inputPanel);
+    inputErrorPanel.add(errorPanel);
   
     JPanel buttonPanel = new JPanel();
     buttonPanel.add(addTransactionBtn);
   
     // Add panels to frame
-    add(inputPanel, BorderLayout.NORTH);
+    add(inputErrorPanel, BorderLayout.NORTH);
     add(new JScrollPane(transactionsTable), BorderLayout.CENTER); 
     add(buttonPanel, BorderLayout.SOUTH);
   

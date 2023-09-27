@@ -28,6 +28,7 @@ public class ExpenseTrackerApp {
       double amount = view.getAmountField(); 
       String category = view.getCategoryField();
 
+      // If amount or category is empty then transaction will not be shown
       if (amount!=0 && category != null) {
         // Create transaction object
         Transaction t = new Transaction(amount, category);
