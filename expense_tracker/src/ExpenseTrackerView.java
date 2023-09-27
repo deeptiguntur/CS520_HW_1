@@ -17,7 +17,7 @@ public class ExpenseTrackerView extends JFrame {
   private JTextField categoryField;
   private DefaultTableModel model;
   private List<Transaction> transactions = new ArrayList<>();
-  JPanel errorPanel = new JPanel();
+  JPanel errorPanel;
 
   InputValidation validation = new InputValidation();
 
@@ -95,13 +95,17 @@ public class ExpenseTrackerView extends JFrame {
     categoryField = new JTextField(10);
     transactionsTable = new JTable(model);
     
-    // Error panel to show errors in UI
-    errorPanel.add(amountErrorLabel, BorderLayout.NORTH);
-    errorPanel.add(categoryErrorLabel, BorderLayout.SOUTH);
-
     // Amount and category error messages for UI
     amountErrorLabel = new JLabel("");
+    amountErrorLabel.setForeground (Color.red);
     categoryErrorLabel = new JLabel("");
+    categoryErrorLabel.setForeground (Color.red);
+
+    // Error panel to show errors in UI
+    errorPanel = new JPanel();
+    errorPanel.setLayout(new BoxLayout(errorPanel, BoxLayout.Y_AXIS));
+    errorPanel.add(amountErrorLabel);
+    errorPanel.add(categoryErrorLabel);
     
     // Layout components
     JPanel inputPanel = new JPanel();
@@ -113,6 +117,7 @@ public class ExpenseTrackerView extends JFrame {
 
     // Panel which contains input fields and error messages
     JPanel inputErrorPanel = new JPanel();
+    inputErrorPanel.setLayout(new BoxLayout(inputErrorPanel, BoxLayout.Y_AXIS));
     inputErrorPanel.add(inputPanel);
     inputErrorPanel.add(errorPanel);
   
